@@ -1,0 +1,39 @@
+<p-card header="Log in"
+        [style]="{'margin-top': '15%'}"
+        styleClass="p-card-shadow max-w-28rem max-h-full ml-auto mr-auto mb-auto relative z-5">
+    <ng-template pTemplate="header">
+    </ng-template>
+    <div class="p-field1">
+        <label id="username" class="block">Username</label>
+        <input class="username" type="text" aria-describedby="username-help" pInputText
+               [(ngModel)]="credentials.username"/>
+        <small id="username-help" class="block">Enter your username.</small>
+        <!--
+        <span class="p-input-icon-left">
+        <i class="pi pi-user"></i>
+            <input class="username" type="text" aria-describedby="username-help" pInputText
+                   [(ngModel)]="credentials.username"/>
+        </span>
+        -->
+    </div>
+    <div class="p-field2">
+        <label id="password" class="block">Password</label>
+        <p-password (keydown.enter)="performLogin()" [(ngModel)]="credentials.password" [feedback]="false"
+                    [toggleMask]="true"></p-password>
+        <small id="password-help" class="block">Enter you password.</small>
+    </div>
+    <p-button [styleClass]="'sign-color'" label="Sign in" (click)="performLogin()" icon="pi pi-sign-in" iconPos="right">
+    </p-button>
+    <div class="text-center pt-4">
+        <div class="text-sm"><a class="font-medium text-gray-600 hover:text-gray-500" href="/request_password_reset">Forgot
+            your password?</a></div>
+    </div>
+    <p-messages></p-messages>
+</p-card>
+<!--
+<div class="field-checkbox">
+    <p-checkbox name="groupname" value="val1" id="rememberMe" [(ngModel)]="checked"></p-checkbox>
+    <label id="rememberUser" for="rememberMe">Remember me</label>
+    <button pButton pRipple type="button" label="Forgot your password?" class="p-button-text"
+            style="font-size: small; justify-content: flex-end"></button>
+</div>-->

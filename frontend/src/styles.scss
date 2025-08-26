@@ -1,0 +1,18 @@
+:root{
+  font-family: sans-serif;
+  box-sizing: border-box;
+}
+
+body{
+  margin: 0;
+  background-color: var(--surface-ground);
+}
+
+html, body {}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+code{
+  background: #00000010;
+  border-radius: 4px;
+  padding: 3px;
+}

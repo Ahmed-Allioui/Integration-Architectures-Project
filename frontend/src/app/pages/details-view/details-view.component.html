@@ -1,0 +1,13 @@
+<app-bonuses [salesman]="salesman"
+             [isInputRemarksDisabled]=!isCeo
+             [isGenerateButtonHidden]=!isCeo
+             [isSendButtonHidden]=!isHR
+             (search)="onSearch($event)"
+             (save)="onSave($event)"
+             (generate)="onGenerate()"
+             (validate)="onValidate()"
+             (reject)="onReject()"
+             (send)="onSend()"
+             (addSocialPerformance)="onAddSocialPerformance($event)"
+             (deleteSocialPerformance)="onDeleteSocialPerformance($event)"
+></app-bonuses>

@@ -1,0 +1,69 @@
+<p-toast></p-toast>
+<!--
+<div class="flex flex-column justify-content-center align-items-center h-full w-full">
+-->
+<div class="flex flex-column content-margin justify-content-center h-full">
+    <p-card header="Please select a year" styleClass="p-card-shadow'">
+        <div class="flex justify-content-center gap-2 mt-3 mb-3">
+            <p-dropdown [options]="years" [(ngModel)]="year"
+                        (onChange)="navigateToSelectedYear(year)"></p-dropdown>
+            <p-button (click)="showModalDialog()" icon="pi pi-cloud-download" label="import Data"
+                      styleClass="mr-2"></p-button>
+        </div>
+    </p-card>
+    <!--
+    <p-table *ngIf="isTableVisible" [value]="salesmen">
+    -->
+    <p-card header="Employees List for {{year}}" styleClass="p-card-shadow'">
+        <p-table [value]="salesmen">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Employee Id</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Job Title</th>
+                    <th>Bonus</th>
+                    <th>Status</th>
+                    <th>Go to calculation</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-salesman>
+                <tr>
+                    <td>{{ salesman.employeeId }}</td>
+                    <td>{{ salesman.firstName }}</td>
+                    <td>{{ salesman.lastName }}</td>
+                    <td>{{ salesman.jobTitle }}</td>
+                    <td>{{ sumBonus(salesman) }}</td>
+                    <td *ngIf="sumBonus(salesman) === 'Bonus not yet generated!'; else generated ">
+                        <p-tag styleClass="mr-2" icon="pi pi-exclamation-triangle" severity="warning" value="doesn't exist"></p-tag>
+                    </td>
+                    <ng-template #generated>
+                        <td>
+                            <p-tag styleClass="mr-2" icon="pi pi-check" severity="success" value="exist"></p-tag>
+                        </td>
+                    </ng-template>
+
+                    <td>
+                        <p-button label="go to calculation" icon="pi pi-calculator"
+                                  (click)="goToCalculation(salesman.employeeId, year)"
+                                  iconPos="right">
+                        </p-button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card>
+</div>
+<p-dialog header='Please enter a year' [style]="{width: '25vw'}" [(visible)]="displayModal" [modal]="true"
+          [draggable]="false" [resizable]="false">
+    <p-message styleClass="mt-3" severity="info"
+               [text]="'Please bear in mind, that if you imported an already existed year in the dropdown it will be overwritten!'"></p-message>
+    <div class="flex gap-2 mt-3 mb-3">
+        <input class="w-full" type="number" pInputText placeholder="example 2020" [(ngModel)]="inputValue" min="1900"
+               max="3000" step="1"
+               #yearInput="ngModel" (keyup.enter)="submit()">
+        <p-button (click)="submit()" label="Import"></p-button>
+    </div>
+    <p-message styleClass="w-full" severity="error" [text]="'Invalid year'"
+               *ngIf="yearInput.invalid && isSubmitted"></p-message>
+</p-dialog>

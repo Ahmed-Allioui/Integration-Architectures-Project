@@ -1,0 +1,275 @@
+<p-toast></p-toast>
+<div class="container">
+    <div class="main-content">
+        <p-card header="Search for a Salesman" styleClass="p-card-shadow" class="top-section">
+            <div class="grid p-fluid">
+                <div class="col-12 md:col" *ngIf="!isInputIdHidden">
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-id-card"></i></span>
+                        <input type="text" pInputText placeholder="Salesman ID" [(ngModel)]="inputId" min="1900"
+                               max="3000" step="1">
+                    </div>
+                </div>
+
+                <div class="col-12 md:col">
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"><i class="pi pi-calendar"></i></span>
+                        <input type="number" pInputText placeholder="Year" [(ngModel)]="inputYear" min="1900"
+                               max="3000" step="1">
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <p-button (click)="onSearch()" label="Search"></p-button>
+                </div>
+            </div>
+        </p-card>
+
+        <p-card header="Salesman Profile" styleClass="p-card-shadow" class="top-section mt-3">
+            <div class="flex justify-content-center">
+                <p-avatar icon="pi pi-user" styleClass="mr-2" size="xlarge" shape="circle"></p-avatar>
+            </div>
+            <div class="text-center" *ngIf="salesman; else notFound">
+                <p><strong>Name:</strong>{{ salesman.firstName }} {{ salesman.lastName }}</p>
+                <p><strong>Salesman ID:</strong> {{ salesman.employeeId }}</p>
+                <p><strong>Job Title:</strong> {{ salesman.jobTitle }}</p>
+                <p><strong>Department:</strong> {{ salesman.department}}</p>
+                <p><strong>Year of Performance:</strong> {{ salesman?.records[0]?.year }}</p>
+            </div>
+            <ng-template #notFound>
+                <p>There's no data found</p>
+            </ng-template>
+        </p-card>
+
+        <p-card header="Validation Informations Overview" styleClass="p-card-shadow" class="top-section mt-3">
+            <p-table [value]="[{}]" *ngIf="salesman && salesman.records && salesman.records.length > 0">
+                <ng-template pTemplate="caption">
+                    <div class="flex align-items-center justify-content-between">
+                        Validation Informations
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Validated by CEO</th>
+                        <th>Validated by HR</th>
+                        <th>Validated by Salesman</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                    <tr>
+                        <td>
+                            <p-tag *ngIf="salesman.records[0].validatedByCEO === true" styleClass="mr-2"
+                                   icon="pi pi-check" severity="success" value="validated"></p-tag>
+                            <p-tag *ngIf="salesman.records[0].validatedByCEO === null" styleClass="mr-2"
+                                   icon="pi pi-exclamation-triangle" severity="warning"
+                                   value="not yet validated"></p-tag>
+                            <p-tag *ngIf="salesman.records[0].validatedByCEO === false" styleClass="mr-2"
+                                   icon="pi pi-times" severity="danger" value="rejected"></p-tag>
+                        </td>
+
+                        <td>
+                            <p-tag *ngIf="salesman.records[0].validatedByHR === true" styleClass="mr-2"
+                                   icon="pi pi-check" severity="success" value="validated"></p-tag>
+                            <p-tag *ngIf="salesman.records[0].validatedByHR === null" styleClass="mr-2"
+                                   icon="pi pi-exclamation-triangle" severity="warning"
+                                   value="not yet validated"></p-tag>
+                            <p-tag *ngIf="salesman.records[0].validatedByHR === false" styleClass="mr-2"
+                                   icon="pi pi-times" severity="danger" value="rejected"></p-tag>
+                        </td>
+
+                        <td>
+                            <p-tag *ngIf="salesman.records[0].validatedBySalesman === true" styleClass="mr-2"
+                                   icon="pi pi-check" severity="success" value="validated"></p-tag>
+                            <p-tag *ngIf="salesman.records[0].validatedBySalesman === null" styleClass="mr-2"
+                                   icon="pi pi-exclamation-triangle" severity="warning"
+                                   value="not yet validated"></p-tag>
+                            <p-tag *ngIf="salesman.records[0].validatedBySalesman === false" styleClass="mr-2"
+                                   icon="pi pi-times" severity="danger" value="rejected"></p-tag>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <ng-template pTemplate="footer">
+                <div class="flex justify-content-center gap-3">
+                    <button pButton pRipple type="button" label="Validate Bonuses" (click)="onValidate()"
+                            class="p-button-success" icon="pi pi-check"></button>
+                    <button pButton pRipple type="button" label="Reject Bonuses" (click)="onReject()"
+                            class="p-button-outlined p-button-danger"
+                            icon="pi pi-times"></button>
+                </div>
+            </ng-template>
+        </p-card>
+
+        <p-card header="Remarks" styleClass="p-card-shadow" class="bottom-section w-full mt-3">
+            <textarea
+                pInputTextarea
+                [(ngModel)]="salesman.records[0].remarks"
+                class="textBox_size"
+                [autoResize]="false"
+                [disabled]="isInputRemarksDisabled"
+            ></textarea>
+            <ng-template pTemplate="footer">
+                <div class="flex justify-content-center">
+                    <p-button label="Save Remarks"
+                              icon="pi pi-save"
+                              class="detail-button"
+                              (click)="onSave()"
+                              iconPos="right"
+                              [disabled]="isInputRemarksDisabled"
+                    ></p-button>
+                </div>
+            </ng-template>
+
+        </p-card>
+    </div>
+
+    <div class="main-content">
+        <p-card header="Orders Evaluation Overview" styleClass="p-card-shadow" class="top-section">
+            <p-table [value]="salesman?.records[0]?.orders"
+                     *ngIf="salesman && salesman.records && salesman.records.length > 0; else showMsg">
+                <ng-template pTemplate="caption">
+                    <div class="flex align-items-center justify-content-between">
+                        Orders Evaluation
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Product</th>
+                        <th>Client</th>
+                        <th>Client Ranking</th>
+                        <th>Items</th>
+                        <th>Bonus</th>
+                        <th>Status</th>
+                    </tr>
+                </ng-template>
+                <!--
+                                <ng-template pTemplate="body" let-order [ngIf]="salesman?.records">
+                -->
+                <ng-template pTemplate="body" let-order>
+                    <!--<tr *ngFor="let order of record.orders">-->
+                    <tr>
+                        <td>{{ order.productName }}</td>
+                        <td>{{ order.client }}</td>
+                        <td>{{ order.clientRanking }}</td>
+                        <td>{{ order.items }}</td>
+                        <td>{{ order.bonus }} €</td>
+                        <td *ngIf="order.bonus; else isEmpty">
+                            <p-tag styleClass="mr-2" icon="pi pi-check" severity="success" value="exist"></p-tag>
+                        </td>
+                        <ng-template #isEmpty>
+                            <td>
+                                <p-tag styleClass="mr-2" icon="pi pi-exclamation-triangle" severity="warning"
+                                       value="doesn't exist"></p-tag>
+                            </td>
+                        </ng-template>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <h2><strong>Total:</strong> {{ sumOrdersBonus(salesman.records[0].orders) }} €</h2>
+                </ng-template>
+            </p-table>
+            <ng-template #showMsg>
+                <p>No Orders Found</p>
+            </ng-template>
+        </p-card>
+        <p-card header="Social Performance Evaluation Overview" styleClass="p-card-shadow" class="bottom-section mt-3">
+            <p-toolbar *ngIf="!isAddSocialPerformanceHidden" styleClass="mb-4 gap-2">
+                <ng-template  pTemplate="left">
+                    <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
+                            (click)="openNew()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table [value]="salesman?.records[0]?.socialPerformances"
+                     *ngIf="salesman && salesman.records && salesman.records.length > 0; else showMsg2">
+                <ng-template pTemplate="caption">
+                    <div class="flex align-items-center justify-content-between">
+                        Social Performance Evaluation
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Goal Description</th>
+                        <th>Target Value</th>
+                        <th>Actual Value</th>
+                        <th>Bonus</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-performance>
+                    <tr>
+                        <td>{{ performance.goalDescription }}</td>
+                        <td>{{ performance.targetValue }}</td>
+                        <td>{{ performance.actualValue }}</td>
+                        <td>{{ performance.bonus }} €</td>
+                        <td *ngIf="performance.bonus; else isEmpty">
+                            <p-tag styleClass="mr-2" icon="pi pi-check" severity="success" value="exist"></p-tag>
+                        </td>
+                        <ng-template #isEmpty>
+                            <td>
+                                <p-tag styleClass="mr-2" icon="pi pi-exclamation-triangle" severity="warning"
+                                       value="doesn't exist"></p-tag>
+                            </td>
+                        </ng-template>
+                        <td>
+                            <button *ngIf="!isAddSocialPerformanceHidden" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                                    (click)="onDeleteSocialPerformance(performance._id)"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <h2>
+                        <strong>Total:</strong> {{ sumSocialPerformanceBonus(salesman.records[0].socialPerformances) }}
+                        €
+                    </h2>
+                </ng-template>
+            </p-table>
+            <ng-template #showMsg2>
+                <p>No Social Performances Found</p>
+            </ng-template>
+        </p-card>
+
+        <p-card header="Total Bonus: {{sumAllBonuses(salesman)}}" class="mt-3" >
+            <div *ngIf="!isGenerateButtonHidden" class="flex justify-content-center">
+                <button pButton pRipple type="button" label="Generate Bonuses"
+                        (click)="onGenerate()" icon="pi pi-play"></button>
+            </div>
+            <div *ngIf="!isSendButtonHidden" class="flex justify-content-center">
+                <button pButton pRipple type="button" label="Send Bonuses" (click)="onSend()"
+                        icon="pi pi-send"></button>
+            </div>
+        </p-card>
+    </div>
+</div>
+<p-dialog [(visible)]="socialPerformanceDialog" [style]="{width: '450px'}" header="Product Details" [modal]="true"
+          styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="field">
+            <label for="goalDescription">Goal Description</label>
+            <input type="text" pInputText id="goalDescription" [(ngModel)]="socialPerformance.goalDescription" required
+                   autofocus/>
+            <small class="p-error" *ngIf="submitted && !socialPerformance.goalDescription">Field is required.</small>
+        </div>
+        <div class="field">
+            <label for="actualValue">Target Value</label>
+            <input type="number" pInputText id="actualValue" [(ngModel)]="socialPerformance.actualValue"/>
+            <small class="p-error" *ngIf="submitted && !socialPerformance.actualValue">Field is required.</small>
+        </div>
+        <div class="field">
+            <label for="targetValue">Actual Value</label>
+            <input type="number" pInputText id="targetValue" [(ngModel)]="socialPerformance.targetValue"/>
+            <small class="p-error" *ngIf="submitted && !socialPerformance.targetValue">Field is required.</small>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                (click)="onAddSocialPerformance(socialPerformance)"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+

@@ -1,0 +1,43 @@
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.left-column {
+    width: 50%;
+}
+
+.main-content {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-section {
+    // flex: 1;
+
+}
+
+.bottom-section {
+    // flex: 1;
+}
+
+.textBox_size{
+    width: 100%;
+    height: 100%;
+    white-space: pre-line;
+    resize: none;
+}
+
+.detail-button{
+    float: right;
+}
+
+::ng-deep .p-card{
+    height: 100%;
+    margin: 1rem;
+
+    .p-card-title{
+        text-align: center;
+    }
+}

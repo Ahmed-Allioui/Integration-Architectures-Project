@@ -1,0 +1,8 @@
+<p-tabMenu *ngIf="isSalesman; else showOther" [model]="itemsSalesman" [activeItem]="itemsSalesman[0]">
+</p-tabMenu>
+<ng-template #showOther>
+    <p-tabMenu [model]="items" [activeItem]="items[0]">
+    </p-tabMenu>
+</ng-template>
+
+
